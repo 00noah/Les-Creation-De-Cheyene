@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulaire de commande</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+    :root {
+      --couleur-primaire: #6B4226; /* Marron artisanal */
+      --couleur-secondaire: #C89F77; /* Beige doré */
+      --couleur-fond: #F5E6D3; /* Beige clair */
+      --texte-primaire: #3b2a1a;
+      --texte-secondaire: #5c4a3a;
+      --bouton-hover: #8B5E3C;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--couleur-fond);
+      color: var(--texte-primaire);
+      line-height: 1.6;
+      padding: 20px;
+    }
+
+    nav { margin-bottom: 20px; }
+    nav a {
+      text-decoration: none;
+      color: var(--couleur-primaire);
+      margin-right: 15px;
+      font-weight: bold;
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+    nav a:hover {
+      transform: scale(1.05);
+      color: var(--bouton-hover);
+    }
+
+    h2 { color: var(--couleur-primaire); margin-bottom: 10px; }
+
+    form, .panier, .infos-client {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+      color: var(--texte-secondaire);
+    }
+
+    select, input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 8px;
+      background: var(--couleur-primaire);
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+    button:hover {
+      background: var(--bouton-hover);
+      transform: scale(1.05);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+      color: var(--texte-primaire);
+    }
+    th { background: var(--couleur-secondaire); color: var(--couleur-primaire); }
+    .total { font-weight: bold; text-align: right; }
+
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <a href="page1.html">Accueil</a>
+  </nav>
+
+  <h2>Formulaire de commande</h2>
+
+  <!-- Sélection produit -->
+  <form id="form-produit">
+    <label for="produit">Choisissez un produit :</label>
+    <select id="produit" required>
+      <option value="">-- Sélectionnez --</option>
+      <option value="Porte-clé personnalisé" data-prix="3.5">Porte-clé personnalisé - 3.5€</option>
+      <option value="Médaille pour chien" data-prix="4">Médaille pour chien - 4€</option>
+      <option value="Médaille personnalisé" data-prix="6">Médaille personnalisé - 6€</option>
+      <option value="Dessous de verre" data-prix="5">Dessous de verre (carré ou rond) - 5€</option>
+      <option value="Plaque chambre (petit)" data-prix="5">Plaque chambre (petit) - 5€</option>
+      <option value="Plaque chambre (moyen)" data-prix="7">Plaque chambre (moyen) - 7€</option>
+      <option value="Planche à saucisson" data-prix="8">Planche à saucisson - 8€</option>
+      <option value="Planche à Apéro" data-prix="10">Planche à Apéro - 10€</option>
+      <option value="Toile personnalisé" data-prix="15">Toile personnalisé - 15€</option>
+    </select>
+
+    <label for="description">Texte ou description à graver :</label>
+    <textarea id="description" rows="3" required></textarea>
+
+    <label for="quantite">Quantité :</label>
+    <input type="number" id="quantite" min="1" value="1" required>
+
+    <button type="button" onclick="ajouterPanier()">Ajouter au panier</button>
+  </form>
+
+  <!-- Panier -->
+  <div class="panier">
+    <h2>Panier</h2>
+    <table id="table-panier">
+      <thead>
+        <tr>
+          <th>Produit</th>
+          <th>Description</th>
+          <th>Quantité</th>
+          <th>Prix unitaire (€)</th>
+          <th>Total (€)</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <p class="total">Total général : <span id="total">0</span> €</p>
+  </div>
+
+  <!-- Infos client -->
+  <div class="infos-client">
+    <h2>Vos informations</h2>
+    <form id="form-commande">
+      <label for="nom">Nom complet :</label>
+      <input type="text" id="nom" required>
+
+      <label for="email">Adresse e-mail :</label>
+      <input type="email" id="email" required>
+
+      <label for="telephone">Téléphone :</label>
+      <input type="tel" id="telephone" required>
+
+      <label for="adresse">Adresse de livraison :</label>
+      <textarea id="adresse" rows="3" required></textarea>
+
+      <button type="submit">Envoyer la commande</button>
+    </form>
+  </div>
+
+  <!-- Script panier + email -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script>
+    emailjs.init("n8sfnOk4xac6iCHzR"); // Clé publique
+
+    let panier = [];
+
+    function ajouterPanier() {
+      let produitSelect = document.getElementById("produit");
+      let produit = produitSelect.value;
+      let prix = parseFloat(produitSelect.selectedOptions[0].dataset.prix);
+      let description = document.getElementById("description").value;
+      let quantite = parseInt(document.getElementById("quantite").value);
+
+      if (!produit || !description || quantite < 1) {
+        alert("Veuillez remplir tous les champs.");
+        return;
+      }
+
+      let item = { produit, description, quantite, prix, total: prix * quantite };
+      panier.push(item);
+      afficherPanier();
+      document.getElementById("form-produit").reset();
+    }
+
+    function afficherPanier() {
+      let tbody = document.querySelector("#table-panier tbody");
+      tbody.innerHTML = "";
+      let totalGeneral = 0;
+
+      panier.forEach(item => {
+        let tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${item.produit}</td>
+          <td>${item.description}</td>
+          <td>${item.quantite}</td>
+          <td>${item.prix.toFixed(2)}</td>
+          <td>${item.total.toFixed(2)}</td>
+        `;
+        tbody.appendChild(tr);
+        totalGeneral += item.total;
+      });
+
+      document.getElementById("total").innerText = totalGeneral.toFixed(2);
+    }
+
+    document.getElementById("form-commande").addEventListener("submit", function(e) {
+      e.preventDefault();
+      if (panier.length === 0) {
+        alert("Votre panier est vide !");
+        return;
+      }
+
+      let infos = {
+        nom: document.getElementById("nom").value,
+        email: document.getElementById("email").value,
+        telephone: document.getElementById("telephone").value,
+        adresse: document.getElementById("adresse").value,
+        panier: panier.map(i => `${i.quantite} x ${i.produit} (${i.description}) = ${i.total.toFixed(2)}€`).join("\n"),
+        total: document.getElementById("total").innerText + "€"
+      };
+
+      emailjs.send(
+        "service_tdf2t3g",
+        "template_h0qyi68",
+        infos,
+        "n8sfnOk4xac6iCHzR"
+      )
+      .then(() => {
+        alert("Commande envoyée avec succès !");
+        panier = [];
+        afficherPanier();
+        document.getElementById("form-commande").reset();
+        window.location.href = "page3.html";
+      })
+      .catch((err) => {
+        alert("Erreur lors de l'envoi : " + JSON.stringify(err));
+      });
+    });
+  </script>
+
+</body>
+</html>
